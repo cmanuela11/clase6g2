@@ -49,9 +49,23 @@ class Mascota:
     def asignarLista_Medicamentos(self,n):
         self.__lista_medicamentos = n 
     
+class Hospital: 
+    def __init__(self):
+
+    def añadirMascota(self,mascota) :
+        mascota.tipo == "canino"
+        if len(self.caninos) >=10
+
+        
+            
+
+
+
+        
 class sistemaV:
     def __init__(self):
-        self.__lista_mascotas = []
+        self.__caninos ={}
+        self.__felinos= {}
     
     def verificarExiste(self,historia):
         for m in self.__lista_mascotas:
@@ -61,7 +75,7 @@ class sistemaV:
         return False
         
     def verNumeroMascotas(self):
-        return len(self.__lista_mascotas) 
+        return len(self.__caninos + self.__felinos) 
     
     def ingresarMascota(self,mascota):
         self.__lista_mascotas.append(mascota) 
@@ -175,6 +189,7 @@ def main():
 
 if __name__=='__main__':
     main()
+
 
 
 
