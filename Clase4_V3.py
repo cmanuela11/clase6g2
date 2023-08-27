@@ -1,109 +1,143 @@
-class Paciente:
-    def __init__(self):
-        self.__nombre = '' 
-        self.__cedula = 0 
-        self.__genero = '' 
-        self.__servicio = '' 
-        
-                
+
+class Medicamento:
+    def __init__(self, nombre, dosis):
+        self.__nombre = nombre
+        self.__dosis = dosis
 
 
-                
-    #metodos get    
-    def verNombre(self):
-        return self.__nombre 
-    def verCedula(self):
-        return self.__cedula 
-    def verGenero(self):
-        return self.__genero 
-    def verServicio(self):
-        return self.__servicio 
-    # metodos set
-    def asignarNombre(self,n):
-        self.__nombre = n 
-    def asignarCedula(self,c):
-        self.__cedula = c 
-    def asignarGenero(self,g):
-        self.__genero = g 
-    def asignarServicio(self,s):
-        self.__servicio = s 
-        
-class Sistema:    
+class Mascota:
+    def __init__(self, nombre, historia_clinica, peso, genero, fecha_ingreso):
+        self.__nombre = nombre
+        self.historia_clinica = historia_clinica
+        self.__peso = peso
+        self.genero = genero
+        self.fecha_ingreso = fecha_ingreso
+        self.medicamentos = []
+
+class Sistema:
     def __init__(self):
-        self.__lista_pacientes = [] 
-        
-    def verificarPaciente(self,cedula):
-        for p in self.__lista_pacientes:
-            if cedula == p.verCedula():
-                return True 
+        self.mascotas_caninos = []
+        self.mascotas_felinos = []
+
+    def ingresar_mascota(self, mascota):
+        if mascota.genero == "canino":
+            if len(self.mascotas_caninos) < 10 and not self.verificar_historia_clinica(mascota.historia_clinica):
+                self.mascotas_caninos.append(mascota)
+                return True
+        elif mascota.genero == "felino":
+            if len(self.mascotas_felinos) < 10 and not self.verificar_historia_clinica(mascota.historia_clinica):
+                self.mascotas_felinos.append(mascota)
+                return True
         return False
+
+    def verificar_historia_clinica(self, historia_clinica):
+        for mascota in self.mascotas_caninos + self.mascotas_felinos:
+            if mascota.historia_clinica == historia_clinica:
+                return True
+        return False
+
+    def ver_fecha_ingreso(self, historia_clinica):
+        for mascota in self.mascotas_caninos + self.mascotas_felinos:
+            if mascota.historia_clinica == historia_clinica:
+                return mascota.fecha_ingreso
+        return None
+
+    def ver_numero_mascotas(self):
+        total_mascotas = len(self.mascotas_caninos) + len(self.mascotas_felinos)
+        print(f"Número de mascotas en el servicio: {total_mascotas}")
+
+    def ver_medicamentos(self, historia_clinica):
+        for mascota in self.mascotas_caninos + self.mascotas_felinos:
+            if mascota.historia_clinica == historia_clinica:
+                return mascota.medicamentos
+        return []
+
+    def eliminar_mascota(self, historia_clinica):
+        for mascota in self.mascotas_caninos:
+            if mascota.historia_clinica == historia_clinica:
+                self.mascotas_caninos.remove(mascota)
+                return True
+        for mascota in self.mascotas_felinos:
+            if mascota.historia_clinica == historia_clinica:
+                self.mascotas_felinos.remove(mascota)
+                return True
+        return False
+
+                
         
-    def ingresarPaciente(self,pac):
-        self.__lista_pacientes.append(pac)
-        return True
-    
-    def verDatosPaciente(self, c):
-        if self.verificarPaciente(c) == False:
-            return None
-        for p in self.__lista_pacientes:
-            #retorne la cedula y la comparo con la ingresada por teclado
-            if c == p.verCedula():
-                return p #si encuentro el paciente lo retorno
-            
-    def verNumeroPacientes(self):
-        print("En el sistema hay: " + str(len(self.__lista_pacientes)) + " pacientes") 
+
+
 
 def main():
-    sis = Sistema() 
-    #probemos lo que llevamos programado
-    while True:
-        #TAREA HACER EL MENU
-        opcion = int(input("\nIngrese \n0 para salir, \n1 para ingresar nuevo paciente, \n2 ver Paciente\n\t--> ")) 
-        
-        if opcion == 1:
-            #ingreso pacientes
-            print("A continuacion se solicitaran los datos ...") 
-            #1. Se solicitan los datos
-            cedula = int(input("Ingrese la cedula: ")) 
-            if sis.verificarPaciente(cedula):
-                print("\n<< Ya existe un paciente con esa cedula >>".upper()) 
-            else:    
-                # 2. se crea un objeto Paciente
-                pac = Paciente() 
-                # como el paciente esta vacio debo ingresarle la informacion
-                pac.asignarNombre(input("Ingrese el nombre: ")) 
-                pac.asignarCedula(cedula) 
-                pac.asignarGenero(input("Ingrese el genero: ")) 
-                pac.asignarServicio(input("Ingrese servicio: ")) 
-                #3. se almacena en la lista que esta dentro de la clase sistema
-                r = sis.ingresarPaciente(pac)             
-                if r:
-                    print("Paciente ingresado") 
-                else:
-                    print("No ingresado") 
-        elif opcion == 2:
-            #1. solicito la cedula que quiero buscar
-            c = int(input("Ingrese la cedula a buscar: ")) 
-            #le pido al sistema que me devuelva en la variable p al paciente que tenga
-            #la cedula c en la lista
-            p = sis.verDatosPaciente(c) 
-            #2. si encuentro al paciente imprimo los datos
-            if p != None:
-                print("Nombre: " + p.verNombre()) 
-                print("Cedula: " + str(p.verCedula())) 
-                print("Genero: " + p.verGenero()) 
-                print("Servicio: " + p.verServicio()) 
-            else:
-                print("No existe un paciente con esa cedula") 
-        elif opcion !=0:
-            continue 
-        else:
-            break 
+    sis= Sistema()
 
-#aca el python descubre cual es la funcion principal
+    while True:
+        print("\nOpciones:")
+        print("1. Ingresar mascota al servicio")
+        print("2. Ver fecha de ingreso de una mascota")
+        print("3. Ver número de mascotas en el servicio")
+        print("4. Ver medicamentos de una mascota")
+        print("5. Eliminar una mascota del servicio")
+        print("6. Salir")
+
+        opcion = int(input("Ingrese el número de la opción: "))
+
+        if opcion == 1:
+            # Ingresar una mascota
+            nombre = input("Nombre de la mascota: ")
+            historia_clinica = input("Número de historia clínica: ")
+            genero = input("Tipo de mascota (canino o felino): ")
+            peso = float(input("Peso de la mascota: "))
+            fecha_ingreso = input("Fecha de ingreso (dd/mm/aaaa): ")
+            mascota = Mascota(nombre, historia_clinica, genero, peso, fecha_ingreso)
+
+            if sis.ingresar_mascota(mascota):
+                print("Mascota ingresada exitosamente.")
+            else:
+                print("No se pudo ingresar la mascota.")
+
+        elif opcion == 2:
+            # Ver fecha de ingreso de una mascota
+            historia_clinica = input("Número de historia clínica de la mascota: ")
+            fecha = sis.ver_fecha_ingreso(historia_clinica)
+            if fecha:
+                print(f"Fecha de ingreso: {fecha}")
+            else:
+                print("No se encontró la mascota.")
+
+        elif opcion == 3:
+            # Ver número de mascotas en el servicio
+            sis.ver_numero_mascotas()
+
+        elif opcion == 4:
+            # Ver medicamentos de una mascota
+            historia_clinica = input("Número de historia clínica de la mascota: ")
+            medicamentos = sis.ver_medicamentos(historia_clinica)
+            if medicamentos:
+                print("Medicamentos:")
+                for medicamento in medicamentos:
+                    print(f"Nombre: {medicamento.nombre}, Dosis: {medicamento.dosis}")
+            else:
+                print("No se encontró la mascota.")
+
+        elif opcion == 5:
+            # Eliminar una mascota del servicio
+            historia_clinica = input("Número de historia clínica de la mascota a eliminar: ")
+            if sis.eliminar_mascota(historia_clinica):
+                print("Mascota eliminada exitosamente.")
+            else:
+                print("No se pudo eliminar la mascota.")
+
+        elif opcion == 6:
+            # Salir
+            break
+
+        else:
+            print("Opción inválida. Por favor ingrese un número válido.")
+
 if __name__ == "__main__":
-    main() 
-        
+    main()
+
         
         
         
